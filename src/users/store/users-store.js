@@ -14,7 +14,14 @@ const loadNextPage = async () => {
     state.users = users
 }
 const loadPreviousPage = async () => {
-    throw new Error('Not implemented')
+    if (state.currentPage === 1) return
+
+    const prevPage = state.currentPage - 1
+    const users = await loadUsersByPage(prevPage)
+    if (users.length === 0) return
+
+    state.currentPage = prevPage
+    state.users = users
 }
 const onUserChanged = () => {
     throw new Error('Not implemented')
@@ -28,6 +35,12 @@ export default {
     loadPreviousPage,
     onUserChanged,
     reloadPage,
+    /**
+     * @returns {User[]}
+     */
     getUsers: () => [...state.users], // Rompe la referencia al objeto (objetos pasan por referencia)
+    /**
+     * @returns {Number}
+     */
     getCurrentPage: () => state.currentPage // Primitivos pasan por valor, no por referencia
 }
